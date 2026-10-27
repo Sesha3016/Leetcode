@@ -4,7 +4,12 @@
     "binary-search",
     "top-k-frequent-elements",
     "best-time-to-buy-and-sell-stock",
-    "trapping-rain-water"
+    "trapping-rain-water",
+    "coin-change",
+    "invert-binary-tree",
+    "daily-temperatures",
+    "merge-k-sorted-lists",
+    "valid-parentheses"
   ],
   "runs": [
     {
@@ -97,6 +102,63 @@
           "difficulty": "Hard",
           "draft_status": "DRAFT_GENERATED_UNVERIFIED",
           "local_test_status": "NOT_RUN",
+          "submission_status": "NOT_SUBMITTED"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "timezone": "Asia/Kolkata",
+      "model": "gemini-3.5-flash-lite",
+      "mix": {
+        "Easy": 2,
+        "Medium": 2,
+        "Hard": 1
+      },
+      "problems": [
+        {
+          "slug": "coin-change",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_FAIL",
+          "local_test_status": "NOT_RUN",
+          "check_details": "/tmp/leetcode-cpp-mwlgs4tb/solution.cpp: In member function \u2018int Solution::coinChange(std::vector<int>&, int)\u2019:\n/tmp/leetcode-cpp-mwlgs4tb/solution.cpp:22:70: error: expected primary-expression before \u2018...\u2019 token\n   22 |                     dp[i] = std::min(dp[i], dp[1 + (i - coin) == 1 ? ... : dp[i - coin] + 1]); // cleaner below:\n      |                                                                      ^~~\n/tmp/leetcode-cpp-mwlgs4tb/solution.cpp:22:70: error: expected \u2018:\u2019 before \u2018...\u2019 token\n/tmp/leetcode-cpp-mwlgs4tb/solution.cpp:22:70: error: expected primary-expression before \u2018...\u2019 token\n/tmp/leetcode-cpp-mwlgs4tb/solution.cpp:22:70: error: expected \u2018]\u2019 before \u2018...\u2019 token\n",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "invert-binary-tree",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "daily-temperatures",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "merge-k-sorted-lists",
+          "difficulty": "Hard",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_FAIL",
+          "local_test_status": "NOT_RUN",
+          "check_details": "/tmp/leetcode-cpp-az1mgt4e/solution.cpp: In constructor \u2018ListNode::ListNode()\u2019:\n/tmp/leetcode-cpp-az1mgt4e/solution.cpp:4:28: error: expected identifier before \u2018nullptr\u2019\n    4 |       ListNode() : val(0), nullptr) {}\n      |                            ^~~~~~~\n/tmp/leetcode-cpp-az1mgt4e/solution.cpp:4:28: error: expected \u2018{\u2019 before \u2018nullptr\u2019\n",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "valid-parentheses",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
           "submission_status": "NOT_SUBMITTED"
         }
       ]
