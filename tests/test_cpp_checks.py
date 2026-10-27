@@ -92,6 +92,17 @@ class Solution { public: int coinChange(std::vector<int>& coins, int amount) {
  for (int a = 1; a <= amount; ++a) for (int c : coins) if (c <= a) dp[a] = std::min(dp[a], dp[a-c] + 1);
  return dp[amount] > amount ? -1 : dp[amount];
 } };
+```""",
+    "climbing-stairs": """```cpp
+class Solution { public: int climbStairs(int n) { if (n <= 2) return n; int a=1,b=2; for(int i=3;i<=n;++i){int c=a+b;a=b;b=c;} return b; } };
+```""",
+    "product-of-array-except-self": """```cpp
+#include <vector>
+class Solution { public: std::vector<int> productExceptSelf(std::vector<int>& a) { int n=a.size(); std::vector<int> o(n,1); int p=1; for(int i=0;i<n;++i){o[i]=p;p*=a[i];} p=1; for(int i=n-1;i>=0;--i){o[i]*=p;p*=a[i];} return o; } };
+```""",
+    "course-schedule": """```cpp
+#include <vector>
+class Solution { public: bool canFinish(int n, std::vector<std::vector<int>>& p) { std::vector<std::vector<int>> g(n); for(auto& e:p) g[e[1]].push_back(e[0]); std::vector<int> state(n); for(int i=0;i<n;++i){ if(state[i]==2)continue; std::vector<std::pair<int,int>> st{{i,0}}; while(!st.empty()){int u=st.back().first; int& j=st.back().second; if(state[u]==0)state[u]=1; if(j==(int)g[u].size()){state[u]=2;st.pop_back();continue;}int v=g[u][j++];if(state[v]==1)return false;if(state[v]==0)st.push_back({v,0});}} return true; } };
 ```"""
 }
 
