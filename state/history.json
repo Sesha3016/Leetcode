@@ -9,7 +9,12 @@
     "invert-binary-tree",
     "daily-temperatures",
     "merge-k-sorted-lists",
-    "valid-parentheses"
+    "valid-parentheses",
+    "maximum-subarray",
+    "median-of-two-sorted-arrays",
+    "merge-two-sorted-lists",
+    "contains-duplicate",
+    "number-of-islands"
   ],
   "runs": [
     {
@@ -155,6 +160,63 @@
         {
           "slug": "valid-parentheses",
           "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "timezone": "Asia/Kolkata",
+      "model": "gemini-3.5-flash-lite",
+      "mix": {
+        "Easy": 2,
+        "Medium": 2,
+        "Hard": 1
+      },
+      "problems": [
+        {
+          "slug": "maximum-subarray",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "median-of-two-sorted-arrays",
+          "difficulty": "Hard",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "merge-two-sorted-lists",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "contains-duplicate",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "number-of-islands",
+          "difficulty": "Medium",
           "draft_status": "DRAFT_GENERATED_UNVERIFIED",
           "compile_status": "COMPILE_PASS",
           "local_test_status": "COMPILE_ONLY_NO_HARNESS",
