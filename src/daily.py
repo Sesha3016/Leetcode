@@ -3,6 +3,7 @@ import json, os, random, re
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from src.cpp_checks import check_cpp
 
 ROOT = Path(__file__).resolve().parents[1]
 PROBLEMS_FILE = ROOT / "src" / "problems.json"
@@ -59,7 +60,7 @@ def main():
     stamp = now.strftime("%Y-%m-%d")
     run_dir = OUTPUT_DIR / stamp
     run_dir.mkdir(parents=True, exist_ok=True)
-    report = [f"# Daily LeetCode Draft Report — {stamp}", "", "**Submission status: NOT_SUBMITTED.** No LeetCode account was accessed.", "**Correctness status: UNVERIFIED.** Local tests were not run.", "", "| # | Problem | Difficulty | Draft status | Submission status |", "|---:|---|---|---|---|"]
+    report = [f"# Daily LeetCode Draft Report — {stamp}", "", "**Submission status: NOT_SUBMITTED.** No LeetCode account was accessed.", "**Correctness status: PARTIALLY CHECKED.** See per-problem compile and smoke-test results below.", "", "| # | Problem | Difficulty | Draft status | Submission status |", "|---:|---|---|---|---|"]
     run_record = {"date": stamp, "timezone": TIMEZONE, "model": MODEL, "mix": MIX, "problems": []}
     used = list(history.get("used_slugs", []))
     queue = []
@@ -69,14 +70,27 @@ def main():
             draft = generate_draft(client, problem)
         except Exception as exc:
             status, draft = "GENERATION_FAILED", f"Generation failed: {safe_error(exc)}"
-        text = f"# {problem['title']}\n\n- Difficulty: {problem['difficulty']}\n- Official problem: {problem['url']}\n- Draft status: {status}\n- Local test status: NOT_RUN\n- LeetCode submission status: NOT_SUBMITTED\n\n> Verify the official statement and constraints. This is not proof of correctness.\n\n{draft}\n"
-        (run_dir / f"{i:02d}-{problem['slug']}.md").write_text(text, encoding="utf-8")
-        report.append(f"| {i} | [{problem['title']}]({problem['url']}) | {problem['difficulty']} | {status} | NOT_SUBMITTED |")
-        run_record["problems"].append({"slug": problem["slug"], "difficulty": problem["difficulty"], "draft_status": status, "local_test_status": "NOT_RUN", "submission_status": "NOT_SUBMITTED"})
+        markdown_path = run_dir / f"{i:02d}-{problem['slug']}.md"
+        text = f"# {problem['title']}\n\n- Difficulty: {problem['difficulty']}\n- Official problem: {problem['url']}\n- Draft status: {status}\n- C++17 compile status: PENDING\n- Local test status: PENDING\n- LeetCode submission status: NOT_SUBMITTED\n\n> Verify the official statement and constraints. This is not proof of correctness.\n\n{draft}\n"
+        markdown_path.write_text(text, encoding="utf-8")
+        if status == "DRAFT_GENERATED_UNVERIFIED":
+            check = check_cpp(markdown_path, problem["slug"])
+            compile_status = check["compile_status"]
+            test_status = check["test_status"]
+            detail = check["details"]
+        else:
+            compile_status, test_status, detail = "NOT_RUN", "NOT_RUN", "Draft generation failed; no code was checked."
+        text = markdown_path.read_text(encoding="utf-8")
+        text = text.replace("- C++17 compile status: PENDING", f"- C++17 compile status: {compile_status}")
+        text = text.replace("- Local test status: PENDING", f"- Local test status: {test_status}")
+        text += f"\n\n## Automated check details\n\n{detail}\n"
+        markdown_path.write_text(text, encoding="utf-8")
+        report.append(f"| {i} | [{problem['title']}]({problem['url']}) | {problem['difficulty']} | {status} | {compile_status} | {test_status} | NOT_SUBMITTED |")
+        run_record["problems"].append({"slug": problem["slug"], "difficulty": problem["difficulty"], "draft_status": status, "compile_status": compile_status, "local_test_status": test_status, "check_details": detail, "submission_status": "NOT_SUBMITTED"})
         queue.append({"slug": problem["slug"], "title": problem["title"], "url": problem["url"], "status": "NOT_SUBMITTED"})
         if status == "DRAFT_GENERATED_UNVERIFIED":
             used.append(problem["slug"])
-    report += ["", "## Limitations", "- AI drafts have not been compiled or tested.", "- This workflow does not log into LeetCode or submit code.", "- Review the official statement and use a permitted submission method."]
+    report += ["", "## Interpretation", "- COMPILE_PASS means the extracted code passed a C++17 syntax check; it does not prove correctness.", "- SMOKE_TEST_PASS means only the configured example and edge-case tests passed.", "- COMPILE_ONLY_NO_HARNESS means code compiled but no problem-specific tests were configured.", "- This workflow does not log into LeetCode or submit code; all submissions remain NOT_SUBMITTED.", "- Review the official statement and use a permitted submission method."]
     history.setdefault("runs", []).append(run_record)
     history["used_slugs"] = list(dict.fromkeys(used))
     STATE_DIR.mkdir(parents=True, exist_ok=True)
