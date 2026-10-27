@@ -20,6 +20,36 @@ struct ListNode {
 }
 
 HARNESS = {
+    "two-sum": r"""
+int main() {
+    Solution s;
+    std::vector<int> a{2,7,11,15};
+    auto got = s.twoSum(a, 9);
+    std::sort(got.begin(), got.end());
+    if (got != std::vector<int>{0,1}) return 1;
+    std::vector<int> b{3,2,4};
+    got = s.twoSum(b, 6);
+    std::sort(got.begin(), got.end());
+    if (got != std::vector<int>{1,2}) return 2;
+    std::vector<int> c{3,3};
+    got = s.twoSum(c, 6);
+    std::sort(got.begin(), got.end());
+    if (got != std::vector<int>{0,1}) return 3;
+    return 0;
+}
+""",
+    "valid-parentheses": r"""
+int main() {
+    Solution s;
+    if (!s.isValid("()")) return 1;
+    if (!s.isValid("()[]{}")) return 2;
+    if (s.isValid("(]")) return 3;
+    if (s.isValid("([)]")) return 4;
+    if (!s.isValid("{[]}")) return 5;
+    if (s.isValid("(")) return 6;
+    return 0;
+}
+""",
     "maximum-subarray": r"""
 int main() {
     Solution s;
