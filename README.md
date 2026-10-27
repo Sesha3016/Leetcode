@@ -7,7 +7,8 @@ A cloud-scheduled study assistant that prepares five C++17 solution drafts each 
 - Generates five AI-assisted study drafts and a report.
 - Avoids reusing previously generated problems while the curated pool permits.
 - **Does not log in to LeetCode or submit solutions.** Submission status is always `NOT_SUBMITTED`.
-- Drafts are unverified and are not compiled or tested by this workflow. Read the official problem statement and validate each solution yourself.
+- Every generated C++17 code block receives a compiler syntax check. Five supported problems also receive deterministic smoke tests; other problems are marked compile-only until a dedicated test harness is added.
+- A compile or smoke-test pass is not proof of correctness. Read the official problem statement and validate each solution yourself.
 - No LeetCode password, session cookie, or account token is required.
 
 ## Setup
@@ -35,7 +36,7 @@ Generated files are written under `output/YYYY-MM-DD/`; the history is stored in
 
 ## Model and costs
 
-The default model is `gemini-2.5-flash-lite`, configurable with `GEMINI_MODEL`. Free-tier access and limits depend on Google's current availability and your account. Check [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing). This project does not guarantee zero cost or unlimited usage.
+The default model is `gemini-3.5-flash-lite`, configurable with `GEMINI_MODEL`. Free-tier access and limits depend on Google's current availability and your account. Check [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing). This project does not guarantee zero cost or unlimited usage.
 
 ## Tests
 
