@@ -173,7 +173,7 @@ def check_cpp(markdown_path: Path, slug: str) -> dict[str, str]:
     with tempfile.TemporaryDirectory(prefix="leetcode-cpp-") as temp:
         temp_path = Path(temp)
         source_path = temp_path / "solution.cpp"
-        source_path.write_text(PREAMBLE.get(slug, "") + "\\n" + cpp, encoding="utf-8")
+        source_path.write_text(PREAMBLE.get(slug, "") + "\n" + cpp, encoding="utf-8")
         compile_result = subprocess.run(
             ["g++", "-std=c++17", "-Wall", "-Wextra", "-pedantic", "-fsyntax-only", str(source_path)],
             capture_output=True, text=True, timeout=20
