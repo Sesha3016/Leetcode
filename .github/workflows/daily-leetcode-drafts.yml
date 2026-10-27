@@ -1,0 +1,47 @@
+name: Daily LeetCode Drafts
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 0 * * *' # 06:00 Asia/Kolkata
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-leetcode-drafts
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install --disable-pip-version-check -r requirements.txt
+      - name: Generate drafts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: gemini-2.5-flash-lite
+          TIMEZONE: Asia/Kolkata
+        run: python -m src.daily
+      - name: Persist problem history
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f state/history.json
+          git diff --cached --quiet || git commit -m "chore: update daily LeetCode history"
+          git push
+      - name: Upload drafts and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-leetcode-drafts
+          path: output/
+          if-no-files-found: warn
+          retention-days: 30
