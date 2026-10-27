@@ -98,11 +98,11 @@ def main():
             if check["compile_status"] == "COMPILE_FAIL":
                 try:
                     draft = repair_draft(client, problem, draft, check["details"])
-                    text = f"# {problem['title']}\\n\\n- Difficulty: {problem['difficulty']}\\n- Official problem: {problem['url']}\\n- Draft status: {status}\\n- C++17 compile status: PENDING\\n- Local test status: PENDING\\n- LeetCode submission status: NOT_SUBMITTED\\n\\n> Verify the official statement and constraints. This is not proof of correctness.\\n\\n{draft}\\n"
+                    text = f"# {problem['title']}\n\n- Difficulty: {problem['difficulty']}\n- Official problem: {problem['url']}\n- Draft status: {status}\n- C++17 compile status: PENDING\n- Local test status: PENDING\n- LeetCode submission status: NOT_SUBMITTED\n\n> Verify the official statement and constraints. This is not proof of correctness.\n\n{draft}\n"
                     markdown_path.write_text(text, encoding="utf-8")
                     check = check_cpp(markdown_path, problem["slug"])
                 except Exception as exc:
-                    check["details"] += f"\\nRepair attempt failed: {safe_error(exc)}"
+                    check["details"] += f"\nRepair attempt failed: {safe_error(exc)}"
             compile_status = check["compile_status"]
             test_status = check["test_status"]
             detail = check["details"]
