@@ -5,6 +5,15 @@ from pathlib import Path
 from src.cpp_checks import check_cpp
 
 SNIPPETS = {
+    "two-sum": """```cpp
+#include <vector>
+class Solution { public: std::vector<int> twoSum(std::vector<int>& a, int target) { for (int i=0;i<(int)a.size();++i) for (int j=i+1;j<(int)a.size();++j) if (a[i]+a[j]==target) return {i,j}; return {}; } };
+```""",
+    "valid-parentheses": """```cpp
+#include <string>
+#include <stack>
+class Solution { public: bool isValid(std::string s) { std::stack<char> st; for(char c:s){if(c=='('||c=='['||c=='{')st.push(c);else{if(st.empty())return false;char t=st.top();st.pop();if((c==')'&&t!='(')||(c==']'&&t!='[')||(c=='}'&&t!='{'))return false;}} return st.empty(); } };
+```""",
     "maximum-subarray": """```cpp
 #include <vector>
 #include <algorithm>
