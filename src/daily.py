@@ -47,6 +47,25 @@ You do not have the official statement. Tell the reader to verify the linked sta
         raise RuntimeError("Model returned an empty or unexpectedly short draft.")
     return content
 
+def repair_draft(client, problem, previous_draft, compiler_error):
+    prompt = f"""Repair this C++17 LeetCode study draft because it failed compilation.
+Title: {problem['title']}
+Difficulty: {problem['difficulty']}
+URL: {problem['url']}
+
+Compiler error:
+{compiler_error[:5000]}
+
+Return a complete corrected study draft, not a patch. Include exactly one fenced C++ code block with a complete LeetCode-style class Solution implementation. Do not use ellipses, placeholders, pseudocode, or unfinished expressions in code. Use standard C++17 syntax. Do not claim tests or submission occurred. The official statement is not available here, so tell the reader to verify the official statement and signature.
+
+Previous draft:
+{previous_draft[:12000]}"""
+    response = client.models.generate_content(model=MODEL, contents=prompt)
+    content = (response.text or "").strip()
+    if len(content) < 80:
+        raise RuntimeError("Repair model returned an empty or unexpectedly short draft.")
+    return content
+
 def main():
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
@@ -75,6 +94,15 @@ def main():
         markdown_path.write_text(text, encoding="utf-8")
         if status == "DRAFT_GENERATED_UNVERIFIED":
             check = check_cpp(markdown_path, problem["slug"])
+            # One bounded repair attempt when the generated code does not compile.
+            if check["compile_status"] == "COMPILE_FAIL":
+                try:
+                    draft = repair_draft(client, problem, draft, check["details"])
+                    text = f"# {problem['title']}\\n\\n- Difficulty: {problem['difficulty']}\\n- Official problem: {problem['url']}\\n- Draft status: {status}\\n- C++17 compile status: PENDING\\n- Local test status: PENDING\\n- LeetCode submission status: NOT_SUBMITTED\\n\\n> Verify the official statement and constraints. This is not proof of correctness.\\n\\n{draft}\\n"
+                    markdown_path.write_text(text, encoding="utf-8")
+                    check = check_cpp(markdown_path, problem["slug"])
+                except Exception as exc:
+                    check["details"] += f"\\nRepair attempt failed: {safe_error(exc)}"
             compile_status = check["compile_status"]
             test_status = check["test_status"]
             detail = check["details"]
