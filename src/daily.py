@@ -60,7 +60,7 @@ def main():
     stamp = now.strftime("%Y-%m-%d")
     run_dir = OUTPUT_DIR / stamp
     run_dir.mkdir(parents=True, exist_ok=True)
-    report = [f"# Daily LeetCode Draft Report — {stamp}", "", "**Submission status: NOT_SUBMITTED.** No LeetCode account was accessed.", "**Correctness status: PARTIALLY CHECKED.** See per-problem compile and smoke-test results below.", "", "| # | Problem | Difficulty | Draft status | Submission status |", "|---:|---|---|---|---|"]
+    report = [f"# Daily LeetCode Draft Report — {stamp}", "", "**Submission status: NOT_SUBMITTED.** No LeetCode account was accessed.", "**Correctness status: PARTIALLY CHECKED.** See per-problem compile and smoke-test results below.", "", "| # | Problem | Difficulty | Draft status | Compile | Local checks | Submission status |", "|---:|---|---|---|---|---|---|"]
     run_record = {"date": stamp, "timezone": TIMEZONE, "model": MODEL, "mix": MIX, "problems": []}
     used = list(history.get("used_slugs", []))
     queue = []
