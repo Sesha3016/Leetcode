@@ -5,9 +5,95 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-# Small deterministic smoke-test harnesses for selected curated problems.
-# Other problems still receive a C++17 syntax/compile check only.
+# Deterministic smoke tests for curated LeetCode problems.
+# Unconfigured problems receive a C++17 syntax check only.
+PREAMBLE = {
+    "merge-two-sorted-lists": r"""
+struct ListNode {
+    int val;
+    ListNode* next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
+};
+""",
+}
+
 HARNESS = {
+    "maximum-subarray": r"""
+int main() {
+    Solution s;
+    if (s.maxSubArray(std::vector<int>{-2,1,-3,4,-1,2,1,-5,4}) != 6) return 1;
+    if (s.maxSubArray(std::vector<int>{-8,-3,-6,-2,-5,-4}) != -2) return 2;
+    if (s.maxSubArray(std::vector<int>{5}) != 5) return 3;
+    if (s.maxSubArray(std::vector<int>{1,2,3,4}) != 10) return 4;
+    return 0;
+}
+""",
+    "median-of-two-sorted-arrays": r"""
+int main() {
+    Solution s;
+    if (std::abs(s.findMedianSortedArrays(std::vector<int>{1,3}, std::vector<int>{2}) - 2.0) > 1e-9) return 1;
+    if (std::abs(s.findMedianSortedArrays(std::vector<int>{1,2}, std::vector<int>{3,4}) - 2.5) > 1e-9) return 2;
+    if (std::abs(s.findMedianSortedArrays(std::vector<int>{}, std::vector<int>{1}) - 1.0) > 1e-9) return 3;
+    if (std::abs(s.findMedianSortedArrays(std::vector<int>{0,0}, std::vector<int>{0,0}) - 0.0) > 1e-9) return 4;
+    if (std::abs(s.findMedianSortedArrays(std::vector<int>{1,2,3,4,5,6}, std::vector<int>{7}) - 4.0) > 1e-9) return 5;
+    return 0;
+}
+""",
+    "merge-two-sorted-lists": r"""
+static std::vector<int> values(ListNode* node) {
+    std::vector<int> out;
+    while (node) { out.push_back(node->val); node = node->next; }
+    return out;
+}
+static ListNode* makeList(const std::vector<int>& vals) {
+    ListNode dummy;
+    ListNode* tail = &dummy;
+    for (int v : vals) { tail->next = new ListNode(v); tail = tail->next; }
+    return dummy.next;
+}
+static void freeList(ListNode* node) {
+    while (node) { ListNode* next = node->next; delete node; node = next; }
+}
+int main() {
+    Solution s;
+    ListNode* a = makeList({1,2,4});
+    ListNode* b = makeList({1,3,4});
+    ListNode* merged = s.mergeTwoLists(a,b);
+    if (values(merged) != std::vector<int>{1,1,2,3,4,4}) return 1;
+    freeList(merged);
+    ListNode* empty = s.mergeTwoLists(nullptr, makeList({0,2}));
+    if (values(empty) != std::vector<int>{0,2}) return 2;
+    freeList(empty);
+    if (s.mergeTwoLists(nullptr, nullptr) != nullptr) return 3;
+    return 0;
+}
+""",
+    "contains-duplicate": r"""
+int main() {
+    Solution s;
+    if (!s.containsDuplicate(std::vector<int>{1,2,3,1})) return 1;
+    if (s.containsDuplicate(std::vector<int>{1,2,3,4})) return 2;
+    if (!s.containsDuplicate(std::vector<int>{-1,0,-1})) return 3;
+    if (s.containsDuplicate(std::vector<int>{7})) return 4;
+    return 0;
+}
+""",
+    "number-of-islands": r"""
+int main() {
+    Solution s;
+    std::vector<std::vector<char>> a{{'1','1','1','1','0'},{'1','1','0','1','0'},{'1','1','0','0','0'},{'0','0','0','0','0'}};
+    if (s.numIslands(a) != 1) return 1;
+    std::vector<std::vector<char>> b{{'1','1','0','0','0'},{'1','1','0','0','0'},{'0','0','1','0','0'},{'0','0','0','1','1'}};
+    if (s.numIslands(b) != 3) return 2;
+    std::vector<std::vector<char>> water{{'0','0'},{'0','0'}};
+    if (s.numIslands(water) != 0) return 3;
+    std::vector<std::vector<char>> empty;
+    if (s.numIslands(empty) != 0) return 4;
+    return 0;
+}
+""",
     "3sum": r"""
 int main() {
     Solution s;
@@ -100,7 +186,8 @@ def check_cpp(markdown_path: Path, slug: str) -> dict[str, str]:
             }
 
         full_source = temp_path / "smoke_test.cpp"
-        full_source.write_text("#include <algorithm>\n#include <vector>\n" + cpp + "\n" + harness + "\n", encoding="utf-8")
+        preamble = PREAMBLE.get(slug, "")
+        full_source.write_text("#include <algorithm>\n#include <cmath>\n#include <vector>\n" + preamble + "\n" + cpp + "\n" + harness + "\n", encoding="utf-8")
         binary = temp_path / "smoke_test"
         build = subprocess.run(
             ["g++", "-std=c++17", "-O2", "-Wall", "-Wextra", "-pedantic", str(full_source), "-o", str(binary)],
