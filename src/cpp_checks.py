@@ -33,11 +33,16 @@ int main() {
     "median-of-two-sorted-arrays": r"""
 int main() {
     Solution s;
-    if (std::abs(s.findMedianSortedArrays(std::vector<int>{1,3}, std::vector<int>{2}) - 2.0) > 1e-9) return 1;
-    if (std::abs(s.findMedianSortedArrays(std::vector<int>{1,2}, std::vector<int>{3,4}) - 2.5) > 1e-9) return 2;
-    if (std::abs(s.findMedianSortedArrays(std::vector<int>{}, std::vector<int>{1}) - 1.0) > 1e-9) return 3;
-    if (std::abs(s.findMedianSortedArrays(std::vector<int>{0,0}, std::vector<int>{0,0}) - 0.0) > 1e-9) return 4;
-    if (std::abs(s.findMedianSortedArrays(std::vector<int>{1,2,3,4,5,6}, std::vector<int>{7}) - 4.0) > 1e-9) return 5;
+    std::vector<int> a{1,3}, b{2};
+    if (std::abs(s.findMedianSortedArrays(a,b) - 2.0) > 1e-9) return 1;
+    std::vector<int> c{1,2}, d{3,4};
+    if (std::abs(s.findMedianSortedArrays(c,d) - 2.5) > 1e-9) return 2;
+    std::vector<int> e{}, f{1};
+    if (std::abs(s.findMedianSortedArrays(e,f) - 1.0) > 1e-9) return 3;
+    std::vector<int> g{0,0}, h{0,0};
+    if (std::abs(s.findMedianSortedArrays(g,h) - 0.0) > 1e-9) return 4;
+    std::vector<int> i{1,2,3,4,5,6}, j{7};
+    if (std::abs(s.findMedianSortedArrays(i,j) - 4.0) > 1e-9) return 5;
     return 0;
 }
 """,
@@ -168,7 +173,7 @@ def check_cpp(markdown_path: Path, slug: str) -> dict[str, str]:
     with tempfile.TemporaryDirectory(prefix="leetcode-cpp-") as temp:
         temp_path = Path(temp)
         source_path = temp_path / "solution.cpp"
-        source_path.write_text(cpp, encoding="utf-8")
+        source_path.write_text(PREAMBLE.get(slug, "") + "\\n" + cpp, encoding="utf-8")
         compile_result = subprocess.run(
             ["g++", "-std=c++17", "-Wall", "-Wextra", "-pedantic", "-fsyntax-only", str(source_path)],
             capture_output=True, text=True, timeout=20
