@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LeetCode Progress Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2b;--line:#27344b;--text:#edf2ff;--muted:#9ba9c3;--green:#34d399;--yellow:#fbbf24;--red:#fb7185;--blue:#7dd3fc}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#0b1020,#111a2d);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1250px;margin:auto;padding:30px 20px 60px}header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}h1{margin:0;font-size:clamp(27px,4vw,40px);letter-spacing:-.04em}p{color:var(--muted)}.sub{margin:6px 0 22px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+button,.file-label{border:1px solid var(--line);background:#1b2940;color:var(--text);padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:600}button:hover,.file-label:hover{border-color:var(--blue)}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.card,.panel{background:rgba(18,26,43,.92);border:1px solid var(--line);border-radius:16px;padding:17px}.metric{font-size:30px;font-weight:750;letter-spacing:-.04em}.label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
+.panel{padding:0;overflow:hidden}.toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:15px;border-bottom:1px solid var(--line)}input,select{background:#0b1324;color:var(--text);border:1px solid var(--line);padding:9px 10px;border-radius:9px;max-width:100%}.toolbar input{flex:1;min-width:180px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:950px}th,td{text-align:left;padding:13px 15px;border-bottom:1px solid #202c40;vertical-align:middle}th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;background:#101827;position:sticky;top:0}td a{color:var(--blue);text-decoration:none;font-weight:650}td a:hover{text-decoration:underline}.pill{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:700;background:#263249;color:#dbeafe}.pill.good{background:#12382f;color:#86efac}.pill.warn{background:#3d3215;color:#fde68a}.pill.bad{background:#421f2a;color:#fda4af}.muted{color:var(--muted)}.status-select{min-width:165px}.foot{font-size:13px;margin-top:16px}.empty{padding:35px;text-align:center;color:var(--muted)}@media(max-width:760px){main{padding:22px 12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{font-size:25px}}
+</style>
+</head>
+<body><main>
+<header><div><h1>LeetCode Progress</h1><p class="sub">Daily draft history, local checks, and your submission outcomes.</p></div><div class="actions"><button id="export">Export progress JSON</button><label class="file-label" for="import">Import progress JSON</label><input id="import" type="file" accept="application/json" hidden><button id="reset">Reset local edits</button></div></header>
+<section class="cards">
+<div class="card"><div class="label">Unique problems</div><div class="metric" id="total">—</div></div>
+<div class="card"><div class="label">Marked solved</div><div class="metric" id="solved">—</div></div>
+<div class="card"><div class="label">Submitted</div><div class="metric" id="submitted">—</div></div>
+<div class="card"><div class="label">Accepted</div><div class="metric" id="accepted">—</div></div>
+</section>
+<div class="panel"><div class="toolbar"><input id="search" placeholder="Search problem title…" aria-label="Search problems"><select id="filter"><option value="all">All statuses</option><option>NOT_STARTED</option><option>SOLVED_LOCALLY</option><option>SUBMITTED</option><option>ACCEPTED</option><option>WRONG_ANSWER</option><option>TIME_LIMIT_EXCEEDED</option><option>RUNTIME_ERROR</option><option>COMPILE_ERROR</option><option>NEEDS_REVIEW</option></select><select id="difficulty"><option value="all">All difficulties</option><option>Easy</option><option>Medium</option><option>Hard</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Problem</th><th>Difficulty</th><th>Latest draft</th><th>C++ compile</th><th>Local tests</th><th>Your status</th><th>Last generated</th></tr></thead><tbody id="rows"></tbody></table></div><div id="empty" class="empty" hidden>No problems match these filters.</div></div>
+<p class="foot">Important: statuses you edit here are saved in this browser only (local storage). Export your progress regularly or import it on another device. This dashboard does not connect to your LeetCode account, submit code, or automatically detect acceptance. The draft history comes from this repository's <code>state/history.json</code>.</p>
+<p class="foot" id="updated"></p>
+</main>
+<script>
+const HISTORY_URL = "../state/history.json";
+const STORAGE_KEY = "leetcode-progress-tracker-v1";
+const STATUS_OPTIONS = [
+ ["NOT_STARTED","Not started"],["SOLVED_LOCALLY","Solved locally"],["SUBMITTED","Submitted"],
+ ["ACCEPTED","Accepted"],["WRONG_ANSWER","Wrong Answer"],["TIME_LIMIT_EXCEEDED","Time Limit Exceeded"],
+ ["RUNTIME_ERROR","Runtime Error"],["COMPILE_ERROR","Compile Error"],["NEEDS_REVIEW","Needs review"]
+];
+let problems = [], overrides = loadOverrides();
+function loadOverrides(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")}catch{return {}}}
+function saveOverrides(){localStorage.setItem(STORAGE_KEY,JSON.stringify(overrides))}
+function titleFromSlug(s){return s.split("-").map(w=>w[0]?.toUpperCase()+w.slice(1)).join(" ")}
+function slugUrl(slug){return "https://leetcode.com/problems/"+encodeURIComponent(slug)+"/"}
+function latestProblems(history){
+ const bySlug = new Map();
+ for(const run of (history.runs||[])){
+  for(const p of (run.problems||[])){
+   const slug=p.slug;if(!slug)continue;
+   const old=bySlug.get(slug);
+   const record={...p,date:run.date||"",model:run.model||"",title:p.title||titleFromSlug(slug),url:p.url||slugUrl(slug)};
+   if(!old || record.date>=old.date)bySlug.set(slug,{...old,...record, occurrences:(old?.occurrences||0)+1});
+   else old.occurrences=(old.occurrences||1)+1;
+  }
+ }
+ return [...bySlug.values()].sort((a,b)=>a.title.localeCompare(b.title));
+}
+function status(slug){return overrides[slug]?.status||"NOT_STARTED"}
+function badge(value){let cls="pill";if(/PASS|ACCEPTED|SOLVED/.test(value))cls+=" good";else if(/FAIL|ERROR|WRONG|TIME_LIMIT/.test(value))cls+=" bad";else cls+=" warn";return '<span class="'+cls+'">'+escapeHtml(value||"UNKNOWN")+"</span>"}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+ const q=document.getElementById("search").value.toLowerCase(),f=document.getElementById("filter").value,d=document.getElementById("difficulty").value;
+ const visible=problems.filter(p=>(p.title.toLowerCase().includes(q)||p.slug.includes(q))&&(f==="all"||status(p.slug)===f)&&(d==="all"||p.difficulty===d));
+ document.getElementById("total").textContent=problems.length;
+ document.getElementById("solved").textContent=problems.filter(p=>["SOLVED_LOCALLY","SUBMITTED","ACCEPTED","WRONG_ANSWER","TIME_LIMIT_EXCEEDED","RUNTIME_ERROR"].includes(status(p.slug))).length;
+ document.getElementById("submitted").textContent=problems.filter(p=>["SUBMITTED","ACCEPTED","WRONG_ANSWER","TIME_LIMIT_EXCEEDED","RUNTIME_ERROR"].includes(status(p.slug))).length;
+ document.getElementById("accepted").textContent=problems.filter(p=>status(p.slug)==="ACCEPTED").length;
+ document.getElementById("rows").innerHTML=visible.map(p=>'<tr><td><a href="'+escapeHtml(p.url||slugUrl(p.slug))+'" target="_blank" rel="noopener">'+escapeHtml(p.title)+'</a><div class="muted">'+escapeHtml(p.slug)+'</div></td><td>'+badge(p.difficulty||"Unknown")+'</td><td>'+badge(p.draft_status||"UNKNOWN")+'</td><td>'+badge(p.compile_status||"NOT_RECORDED")+'</td><td>'+badge(p.local_test_status||"NOT_RECORDED")+'</td><td><select class="status-select" data-slug="'+escapeHtml(p.slug)+'">'+STATUS_OPTIONS.map(([v,l])=>'<option value="'+v+'" '+(status(p.slug)===v?"selected":"")+'>'+l+'</option>').join("")+'</select></td><td>'+escapeHtml(p.date||"—")+'</td></tr>').join("");
+ document.getElementById("empty").hidden=visible.length!==0;
+ document.getElementById("updated").textContent="Loaded "+problems.length+" unique problems from repository history.";
+}
+async function init(){
+ try{const r=await fetch(HISTORY_URL,{cache:"no-store"});if(!r.ok)throw Error("Could not load state/history.json ("+r.status+").");const data=await r.json();problems=latestProblems(data);render()}
+ catch(e){document.getElementById("rows").innerHTML='<tr><td colspan="7" class="empty">Could not load problem history. Open this dashboard after GitHub Pages is enabled and deployed. Details: '+escapeHtml(e.message)+'</td></tr>';document.getElementById("total").textContent="—"}
+}
+document.getElementById("rows").addEventListener("change",e=>{if(!e.target.matches("select[data-slug]"))return;overrides[e.target.dataset.slug]={...(overrides[e.target.dataset.slug]||{}),status:e.target.value};saveOverrides();render()});
+["search","filter","difficulty"].forEach(id=>document.getElementById(id).addEventListener(id==="search"?"input":"change",render));
+document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),overrides},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="leetcode-progress.json";a.click();URL.revokeObjectURL(a.href)});
+document.getElementById("import").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data.overrides||typeof data.overrides!=="object")throw Error("Invalid progress file");overrides=data.overrides;saveOverrides();render()}catch(err){alert("Import failed: "+err.message)}e.target.value=""});
+document.getElementById("reset").addEventListener("click",()=>{if(confirm("Clear all statuses saved in this browser? Export first if you want a backup.")){overrides={};saveOverrides();render()}});
+init();
+</script></body></html>
