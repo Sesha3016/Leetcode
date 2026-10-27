@@ -155,6 +155,19 @@ int main() {
     return 0;
 }
 """,
+    "coin-change": r"""
+int main() {
+    Solution s;
+    std::vector<int> a{1,2,5};
+    if (s.coinChange(a, 11) != 3) return 1;
+    std::vector<int> b{2};
+    if (s.coinChange(b, 3) != -1) return 2;
+    std::vector<int> c{1};
+    if (s.coinChange(c, 0) != 0) return 3;
+    if (s.coinChange(c, 2) != 2) return 4;
+    return 0;
+}
+""",
 }
 
 def extract_cpp(markdown: str) -> str:
