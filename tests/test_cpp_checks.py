@@ -92,7 +92,7 @@ class CppSmokeTestHarnessTests(unittest.TestCase):
             for slug, markdown in SNIPPETS.items():
                 with self.subTest(problem=slug):
                     path = Path(temp) / f"{slug}.md"
-                    markdown = markdown.replace("\\\\n", "\\n")
+                    markdown = markdown.replace("\\n", "\n")
                     path.write_text(markdown, encoding="utf-8")
                     result = check_cpp(path, slug)
                     self.assertEqual(result["compile_status"], "COMPILE_PASS", result["details"])
