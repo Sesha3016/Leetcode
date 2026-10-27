@@ -35,7 +35,7 @@ int main() {
     Solution s;
     if (!s.isPalindrome("A man, a plan, a canal: Panama")) return 1;
     if (s.isPalindrome("race a car")) return 2;
-    if (s.isPalindrome(" ")) return 3;
+    if (!s.isPalindrome(" ")) return 3;
     if (s.isPalindrome("0P")) return 4;
     return 0;
 }
@@ -54,10 +54,14 @@ int main() {
     "daily-temperatures": r"""
 int main() {
     Solution s;
-    if (s.dailyTemperatures(std::vector<int>{73,74,75,71,69,72,76,73}) != std::vector<int>{1,1,4,2,1,1,0,0}) return 1;
-    if (s.dailyTemperatures(std::vector<int>{30,40,50,60}) != std::vector<int>{1,1,1,0}) return 2;
-    if (s.dailyTemperatures(std::vector<int>{30,30,30}) != std::vector<int>{0,0,0}) return 3;
-    if (s.dailyTemperatures(std::vector<int>{}) != std::vector<int>{}) return 4;
+    std::vector<int> a{73,74,75,71,69,72,76,73};
+    if (s.dailyTemperatures(a) != std::vector<int>{1,1,4,2,1,1,0,0}) return 1;
+    std::vector<int> b{30,40,50,60};
+    if (s.dailyTemperatures(b) != std::vector<int>{1,1,1,0}) return 2;
+    std::vector<int> c{30,30,30};
+    if (s.dailyTemperatures(c) != std::vector<int>{0,0,0}) return 3;
+    std::vector<int> empty;
+    if (s.dailyTemperatures(empty) != std::vector<int>{}) return 4;
     return 0;
 }
 """,
