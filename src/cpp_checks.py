@@ -8,6 +8,16 @@ from pathlib import Path
 # Deterministic smoke tests for curated LeetCode problems.
 # Unconfigured problems receive a C++17 syntax check only.
 PREAMBLE = {
+    "invert-binary-tree": r"""
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode* left, TreeNode* right) : val(x), left(left), right(right) {}
+};
+""",
     "merge-two-sorted-lists": r"""
 struct ListNode {
     int val;
@@ -20,6 +30,62 @@ struct ListNode {
 }
 
 HARNESS = {
+    "valid-palindrome": r"""
+int main() {
+    Solution s;
+    if (!s.isPalindrome("A man, a plan, a canal: Panama")) return 1;
+    if (s.isPalindrome("race a car")) return 2;
+    if (s.isPalindrome(" ")) return 3;
+    if (s.isPalindrome("0P")) return 4;
+    return 0;
+}
+""",
+    "longest-substring-without-repeating-characters": r"""
+int main() {
+    Solution s;
+    if (s.lengthOfLongestSubstring("abcabcbb") != 3) return 1;
+    if (s.lengthOfLongestSubstring("bbbbb") != 1) return 2;
+    if (s.lengthOfLongestSubstring("pwwkew") != 3) return 3;
+    if (s.lengthOfLongestSubstring("") != 0) return 4;
+    if (s.lengthOfLongestSubstring("dvdf") != 3) return 5;
+    return 0;
+}
+""",
+    "daily-temperatures": r"""
+int main() {
+    Solution s;
+    if (s.dailyTemperatures(std::vector<int>{73,74,75,71,69,72,76,73}) != std::vector<int>{1,1,4,2,1,1,0,0}) return 1;
+    if (s.dailyTemperatures(std::vector<int>{30,40,50,60}) != std::vector<int>{1,1,1,0}) return 2;
+    if (s.dailyTemperatures(std::vector<int>{30,30,30}) != std::vector<int>{0,0,0}) return 3;
+    if (s.dailyTemperatures(std::vector<int>{}) != std::vector<int>{}) return 4;
+    return 0;
+}
+""",
+    "invert-binary-tree": r"""
+static bool sameTree(TreeNode* a, TreeNode* b) {
+    if (!a || !b) return a == b;
+    return a->val == b->val && sameTree(a->left,b->left) && sameTree(a->right,b->right);
+}
+static void freeTree(TreeNode* n) {
+    if (!n) return;
+    freeTree(n->left); freeTree(n->right); delete n;
+}
+int main() {
+    Solution s;
+    TreeNode* root = new TreeNode(4, new TreeNode(2,new TreeNode(1),new TreeNode(3)), new TreeNode(7,new TreeNode(6),new TreeNode(9)));
+    TreeNode* expected = new TreeNode(4, new TreeNode(7,new TreeNode(9),new TreeNode(6)), new TreeNode(2,new TreeNode(3),new TreeNode(1)));
+    TreeNode* got = s.invertTree(root);
+    if (!sameTree(got, expected)) return 1;
+    freeTree(got); freeTree(expected);
+    if (s.invertTree(nullptr) != nullptr) return 2;
+    TreeNode* one = new TreeNode(1);
+    TreeNode* inverted = s.invertTree(one);
+    bool ok = inverted && inverted->val == 1 && !inverted->left && !inverted->right;
+    freeTree(inverted);
+    if (!ok) return 3;
+    return 0;
+}
+""",
     "two-sum": r"""
 int main() {
     Solution s;
