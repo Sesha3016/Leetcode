@@ -5,6 +5,24 @@ from pathlib import Path
 from src.cpp_checks import check_cpp
 
 SNIPPETS = {
+    "valid-palindrome": """```cpp
+#include <string>
+#include <cctype>
+class Solution { public: bool isPalindrome(std::string s) { int l=0,r=(int)s.size()-1; while(l<r){while(l<r&&!std::isalnum((unsigned char)s[l]))++l;while(l<r&&!std::isalnum((unsigned char)s[r]))--r;if(std::tolower((unsigned char)s[l])!=std::tolower((unsigned char)s[r]))return false;++l;--r;}return true;} };
+```""",
+    "longest-substring-without-repeating-characters": """```cpp
+#include <string>
+#include <vector>
+#include <algorithm>
+class Solution { public: int lengthOfLongestSubstring(std::string s) { std::vector<int> last(256,-1); int start=0,best=0; for(int i=0;i<(int)s.size();++i){unsigned char c=s[i];start=std::max(start,last[c]+1);last[c]=i;best=std::max(best,i-start+1);}return best;} };
+```""",
+    "daily-temperatures": """```cpp
+#include <vector>
+class Solution { public: std::vector<int> dailyTemperatures(std::vector<int>& t) { std::vector<int> ans(t.size()), st; for(int i=0;i<(int)t.size();++i){while(!st.empty()&&t[i]>t[st.back()]){int j=st.back();st.pop_back();ans[j]=i-j;}st.push_back(i);}return ans;} };
+```""",
+    "invert-binary-tree": """```cpp
+class Solution { public: TreeNode* invertTree(TreeNode* root) { if(!root)return nullptr; auto left=invertTree(root->left); auto right=invertTree(root->right); root->left=right;root->right=left;return root;} };
+```""",
     "two-sum": """```cpp
 #include <vector>
 class Solution { public: std::vector<int> twoSum(std::vector<int>& a, int target) { for (int i=0;i<(int)a.size();++i) for (int j=i+1;j<(int)a.size();++j) if (a[i]+a[j]==target) return {i,j}; return {}; } };
