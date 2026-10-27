@@ -83,7 +83,7 @@ class Solution { public: int maxProfit(const std::vector<int>& p){int m=p.empty(
 #include <vector>
 #include <algorithm>
 class Solution { public: int trap(const std::vector<int>& h){int l=0,r=(int)h.size()-1,lm=0,rm=0,a=0;while(l<=r){if(h[l]<=h[r]){lm=std::max(lm,h[l]);a+=lm-h[l++];}else{rm=std::max(rm,h[r]);a+=rm-h[r--];}}return a;} };
-```""",,
+```""",
     "coin-change": """```cpp
 #include <vector>
 #include <algorithm>
