@@ -5,6 +5,28 @@ from pathlib import Path
 from src.cpp_checks import check_cpp
 
 SNIPPETS = {
+    "merge-k-sorted-lists": """```cpp
+#include <vector>
+#include <queue>
+class Solution { public: ListNode* mergeKLists(std::vector<ListNode*>& lists) { auto cmp=[](ListNode*a,ListNode*b){return a->val>b->val;}; std::priority_queue<ListNode*,std::vector<ListNode*>,decltype(cmp)> q(cmp); for(auto n:lists)if(n)q.push(n); ListNode d;auto p=&d;while(!q.empty()){auto n=q.top();q.pop();p->next=n;p=n;if(n->next)q.push(n->next);}p->next=nullptr;return d.next;} };
+```""",
+    "regular-expression-matching": """```cpp
+#include <string>
+#include <vector>
+class Solution { public: bool isMatch(std::string s,std::string p) { int m=s.size(),n=p.size();std::vector<std::vector<bool>> d(m+1,std::vector<bool>(n+1));d[0][0]=true;for(int j=2;j<=n;++j)if(p[j-1]=='*')d[0][j]=d[0][j-2];for(int i=1;i<=m;++i)for(int j=1;j<=n;++j){if(p[j-1]=='.'||p[j-1]==s[i-1])d[i][j]=d[i-1][j-1];else if(p[j-1]=='*'){d[i][j]=d[i][j-2];if(p[j-2]=='.'||p[j-2]==s[i-1])d[i][j]=d[i][j]||d[i-1][j];}}return d[m][n];} };
+```""",
+    "n-queens": """```cpp
+#include <vector>
+#include <string>
+class Solution { public: std::vector<std::vector<std::string>> solveNQueens(int n) { std::vector<std::vector<std::string>> out;std::vector<std::string>b(n,std::string(n,'.'));std::vector<int> col(n),d1(2*n),d2(2*n);auto dfs=[&](auto&& self,int r)->void{if(r==n){out.push_back(b);return;}for(int c=0;c<n;++c)if(!col[c]&&!d1[r-c+n]&&!d2[r+c]){col[c]=d1[r-c+n]=d2[r+c]=1;b[r][c]='Q';self(self,r+1);b[r][c]='.';col[c]=d1[r-c+n]=d2[r+c]=0;}};dfs(dfs,0);return out;} };
+```""",
+    "word-ladder": """```cpp
+#include <string>
+#include <vector>
+#include <unordered_set>
+#include <queue>
+class Solution { public: int ladderLength(std::string begin,std::string end,std::vector<std::string>& words) { std::unordered_set<std::string> dict(words.begin(),words.end());if(!dict.count(end))return 0;std::queue<std::pair<std::string,int>>q;q.push({begin,1});dict.erase(begin);while(!q.empty()){auto [w,d]=q.front();q.pop();if(w==end)return d;for(int i=0;i<(int)w.size();++i){char old=w[i];for(char c='a';c<='z';++c){w[i]=c;if(dict.erase(w))q.push({w,d+1});}w[i]=old;}}return 0;} };
+```""",
     "valid-palindrome": """```cpp
 #include <string>
 #include <cctype>
