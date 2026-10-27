@@ -10,7 +10,7 @@ STATE_DIR = ROOT / "state"
 HISTORY_FILE = STATE_DIR / "history.json"
 OUTPUT_DIR = ROOT / "output"
 TIMEZONE = os.getenv("TIMEZONE", "Asia/Kolkata")
-MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 MIX = {"Easy": 2, "Medium": 2, "Hard": 1}
 
 def load_json(path, fallback):
