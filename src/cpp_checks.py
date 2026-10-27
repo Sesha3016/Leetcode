@@ -100,7 +100,7 @@ def check_cpp(markdown_path: Path, slug: str) -> dict[str, str]:
             }
 
         full_source = temp_path / "smoke_test.cpp"
-        full_source.write_text("#include <algorithm>\\n#include <vector>\\n" + cpp + "\\n" + harness + "\\n", encoding="utf-8")
+        full_source.write_text("#include <algorithm>\n#include <vector>\n" + cpp + "\n" + harness + "\n", encoding="utf-8")
         binary = temp_path / "smoke_test"
         build = subprocess.run(
             ["g++", "-std=c++17", "-O2", "-Wall", "-Wextra", "-pedantic", str(full_source), "-o", str(binary)],
