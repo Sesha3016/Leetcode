@@ -155,6 +155,42 @@ int main() {
     return 0;
 }
 """,
+    "climbing-stairs": r"""
+int main() {
+    Solution s;
+    if (s.climbStairs(2) != 2) return 1;
+    if (s.climbStairs(3) != 3) return 2;
+    if (s.climbStairs(1) != 1) return 3;
+    if (s.climbStairs(5) != 8) return 4;
+    return 0;
+}
+""",
+    "product-of-array-except-self": r"""
+int main() {
+    Solution s;
+    std::vector<int> a{1,2,3,4};
+    if (s.productExceptSelf(a) != std::vector<int>{24,12,8,6}) return 1;
+    std::vector<int> b{-1,1,0,-3,3};
+    if (s.productExceptSelf(b) != std::vector<int>{0,0,9,0,0}) return 2;
+    std::vector<int> c{2,3};
+    if (s.productExceptSelf(c) != std::vector<int>{3,2}) return 3;
+    return 0;
+}
+""",
+    "course-schedule": r"""
+int main() {
+    Solution s;
+    std::vector<std::vector<int>> a{{1,0}};
+    if (!s.canFinish(2, a)) return 1;
+    std::vector<std::vector<int>> b{{1,0},{0,1}};
+    if (s.canFinish(2, b)) return 2;
+    std::vector<std::vector<int>> c{{1,0},{2,0},{3,1},{3,2}};
+    if (!s.canFinish(4, c)) return 3;
+    std::vector<std::vector<int>> d;
+    if (!s.canFinish(1, d)) return 4;
+    return 0;
+}
+""",
     "coin-change": r"""
 int main() {
     Solution s;
