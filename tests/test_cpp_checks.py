@@ -83,7 +83,16 @@ class Solution { public: int maxProfit(const std::vector<int>& p){int m=p.empty(
 #include <vector>
 #include <algorithm>
 class Solution { public: int trap(const std::vector<int>& h){int l=0,r=(int)h.size()-1,lm=0,rm=0,a=0;while(l<=r){if(h[l]<=h[r]){lm=std::max(lm,h[l]);a+=lm-h[l++];}else{rm=std::max(rm,h[r]);a+=rm-h[r--];}}return a;} };
-```""",
+```""",,
+    "coin-change": """```cpp
+#include <vector>
+#include <algorithm>
+class Solution { public: int coinChange(std::vector<int>& coins, int amount) {
+ std::vector<int> dp(amount + 1, amount + 1); dp[0] = 0;
+ for (int a = 1; a <= amount; ++a) for (int c : coins) if (c <= a) dp[a] = std::min(dp[a], dp[a-c] + 1);
+ return dp[amount] > amount ? -1 : dp[amount];
+} };
+```"""
 }
 
 class CppSmokeTestHarnessTests(unittest.TestCase):
