@@ -14,7 +14,12 @@
     "median-of-two-sorted-arrays",
     "merge-two-sorted-lists",
     "contains-duplicate",
-    "number-of-islands"
+    "number-of-islands",
+    "course-schedule",
+    "climbing-stairs",
+    "longest-substring-without-repeating-characters",
+    "word-ladder",
+    "valid-palindrome"
   ],
   "runs": [
     {
@@ -217,6 +222,63 @@
         {
           "slug": "number-of-islands",
           "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "timezone": "Asia/Kolkata",
+      "model": "gemini-3.5-flash-lite",
+      "mix": {
+        "Easy": 2,
+        "Medium": 2,
+        "Hard": 1
+      },
+      "problems": [
+        {
+          "slug": "course-schedule",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "climbing-stairs",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "longest-substring-without-repeating-characters",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "word-ladder",
+          "difficulty": "Hard",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "valid-palindrome",
+          "difficulty": "Easy",
           "draft_status": "DRAFT_GENERATED_UNVERIFIED",
           "compile_status": "COMPILE_PASS",
           "local_test_status": "COMPILE_ONLY_NO_HARNESS",
