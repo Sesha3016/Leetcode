@@ -19,7 +19,8 @@
     "climbing-stairs",
     "longest-substring-without-repeating-characters",
     "word-ladder",
-    "valid-palindrome"
+    "valid-palindrome",
+    "n-queens"
   ],
   "runs": [
     {
@@ -283,6 +284,63 @@
           "compile_status": "COMPILE_PASS",
           "local_test_status": "COMPILE_ONLY_NO_HARNESS",
           "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "timezone": "Asia/Kolkata",
+      "model": "gemini-3.5-flash-lite",
+      "mix": {
+        "Easy": 2,
+        "Medium": 2,
+        "Hard": 1
+      },
+      "problems": [
+        {
+          "slug": "binary-search",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "SMOKE_TEST_PASS",
+          "check_details": "Configured example/edge-case smoke tests passed.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "merge-two-sorted-lists",
+          "difficulty": "Easy",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "SMOKE_TEST_PASS",
+          "check_details": "Configured example/edge-case smoke tests passed.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "top-k-frequent-elements",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "SMOKE_TEST_PASS",
+          "check_details": "Configured example/edge-case smoke tests passed.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "n-queens",
+          "difficulty": "Hard",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "COMPILE_ONLY_NO_HARNESS",
+          "check_details": "C++17 syntax check passed; no problem-specific smoke-test harness is configured.",
+          "submission_status": "NOT_SUBMITTED"
+        },
+        {
+          "slug": "maximum-subarray",
+          "difficulty": "Medium",
+          "draft_status": "DRAFT_GENERATED_UNVERIFIED",
+          "compile_status": "COMPILE_PASS",
+          "local_test_status": "SMOKE_TEST_PASS",
+          "check_details": "Configured example/edge-case smoke tests passed.",
           "submission_status": "NOT_SUBMITTED"
         }
       ]
