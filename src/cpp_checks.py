@@ -30,6 +30,52 @@ struct ListNode {
 }
 
 HARNESS = {
+    "merge-k-sorted-lists": r"""
+static ListNode* mk(const std::vector<int>& vals) { ListNode d; auto p=&d; for(int v:vals){p->next=new ListNode(v);p=p->next;} return d.next; }
+static std::vector<int> vals(ListNode* n) { std::vector<int> out; while(n){out.push_back(n->val);n=n->next;} return out; }
+static void del(ListNode* n) { while(n){auto p=n->next;delete n;n=p;} }
+int main() {
+    Solution s;
+    std::vector<ListNode*> a{mk({1,4,5}),mk({1,3,4}),mk({2,6})};
+    auto got=s.mergeKLists(a);
+    if(vals(got)!=std::vector<int>{1,1,2,3,4,4,5,6}) return 1;
+    del(got);
+    std::vector<ListNode*> b;
+    if(s.mergeKLists(b)!=nullptr) return 2;
+    return 0;
+}
+""",
+    "regular-expression-matching": r"""
+int main() {
+    Solution s;
+    if (!s.isMatch("aa","a*")) return 1;
+    if (!s.isMatch("ab",".*")) return 2;
+    if (s.isMatch("mississippi","mis*is*p*.")) return 3;
+    if (!s.isMatch("","a*b*")) return 4;
+    if (s.isMatch("a","")) return 5;
+    return 0;
+}
+""",
+    "n-queens": r"""
+int main() {
+    Solution s;
+    auto a=s.solveNQueens(1);
+    if(a.size()!=1 || a[0]!=std::vector<std::string>{"Q"}) return 1;
+    if(!s.solveNQueens(2).empty()) return 2;
+    if(s.solveNQueens(4).size()!=2) return 3;
+    return 0;
+}
+""",
+    "word-ladder": r"""
+int main() {
+    Solution s;
+    std::vector<std::string> a{"hot","dot","dog","lot","log","cog"};
+    if(s.ladderLength("hit","cog",a)!=5) return 1;
+    std::vector<std::string> b{"hot","dot","dog","lot","log"};
+    if(s.ladderLength("hit","cog",b)!=0) return 2;
+    return 0;
+}
+""",
     "valid-palindrome": r"""
 int main() {
     Solution s;
