@@ -71,6 +71,7 @@ public:
 ```""",
     "trapping-rain-water": """```cpp
 #include <vector>
+#include <algorithm>
 class Solution {
 public:
  int trap(const std::vector<int>& h) {
